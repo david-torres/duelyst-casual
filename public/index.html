@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" data-framework="react">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Duelyst Casual</title>
+    <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/assets/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.15.0/lodash.min.js"></script>
+    <script src="https://npmcdn.com/vue/dist/vue.min.js"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            padding-top: 70px;
+            /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Duelyst Casual</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="mailto:detour27@gmail.com">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="container" class="container">
+        <div class="row col-md-3">
+            <form>
+                <div class="form-group">
+                    <label for="creator">In-Game Name</label>
+                    <input type="text"
+                        id="creator"
+                        v-model="creator"
+                        class="form-control"
+                        placeholder="e.g. DuelystPlayer42">
+                </div>
+                <div class="form-group">
+                    <label for="faction">Faction</label>
+                    <select
+                        id="faction"
+                        v-model="faction"
+                        class="form-control">
+                        <option value="Abyssian">Abyssian</option>
+                        <option value="Lyonar">Lyonar</option>
+                        <option value="Magmar">Magmar</option>
+                        <option value="Songhai">Songhai</option>
+                        <option value="Vanar">Vanar</option>
+                        <option value="Vetruvian">Vetruvian</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description (optional) </label>
+                    <textarea
+                        id="description"
+                        v-model="description"
+                        class="form-control"
+                        rows="5"
+                        placeholder="Description of the type of game you're looking for, e.g.: LF Tier 1, LF mentor, LF memedeck">
+                    </textarea>
+                </div>
+                <input type="hidden"
+                    id="accepted"
+                    v-model="accepted"
+                    value="0">
+                <button type="submit" class="btn btn-primary" v-on:click="post">Request Game</button>
+            </form>
+        </div>
+        <div class="row col-md-7 col-md-offset-1">
+            <ul class="list-unstyled">
+              <li v-for="item in items" track-by="id" v-cloak>
+                <h4>
+                    {{ item.creator }}
+                    <small class="pull-right">{{ item.timestamp }}</small>
+                </h4>
+                Faction: {{ item.faction }}<br/>
+                Description: {{ item.description }}<br/>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success" v-on:click="accept($index)">Accept Game</button>
+                </div>
+                <hr/>
+              </li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="/assets/js/app.js"></script>
+</body>
+
+</html>
