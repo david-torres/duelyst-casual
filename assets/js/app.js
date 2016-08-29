@@ -58,9 +58,21 @@ var app = new Vue({
     }
 });
 
+
 ws.onmessage = function (e) {
     var data = JSON.parse(e.data);
     if (data) {
         app.receive(data);
     }
+};
+ws.onopen = function (e) {
+    console.log("Connected");
+};
+ws.onclose = function (e) {
+    console.log("Disconnected")
+    alert("Disconnected, please refresh your browser");
+};
+ws.onerror = function (e) {
+    console.log(e);
+    alert("A wild error appeared! please refresh your browser");
 };
