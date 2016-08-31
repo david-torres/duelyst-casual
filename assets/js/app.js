@@ -1,8 +1,24 @@
+// open websocket
 var ws = new WebSocket("ws://" + window.location.host + "/ws");
 
+// register modal component
+Vue.component('modal', {
+    template: '#modal-template',
+    props: {
+        show: {
+            type: Boolean,
+            required: true,
+            twoWay: true
+        }
+    }
+});
+
+// init app
 var app = new Vue({
     el: "#container",
     data: {
+        showModal: false,
+        current: null,
         creator: null,
         faction: null,
         description: null,
@@ -51,6 +67,8 @@ var app = new Vue({
         },
         accept: function (index) {
             var item = this.items[index];
+            this.current = item;
+            this.showModal = true;
             ws.send(JSON.stringify({
                 id: item.id
             }));
@@ -58,20 +76,22 @@ var app = new Vue({
     }
 });
 
-
+// init websocket
 ws.onmessage = function (e) {
     var data = JSON.parse(e.data);
     if (data) {
         app.receive(data);
     }
 };
+
 ws.onopen = function (e) {
     console.log("Connected");
 };
+
 ws.onclose = function (e) {
-    console.log("Disconnected")
-    alert("Disconnected, please refresh your browser");
+    console.log("Disconnected");
 };
+
 ws.onerror = function (e) {
     console.log(e);
     alert("A wild error appeared! please refresh your browser");
