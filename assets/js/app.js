@@ -48,6 +48,11 @@ var app = new Vue({
                 .uniqBy(function (e) {
                     return e.id;
                 })
+                .map(function (e) {
+                    // update timestamps
+                    e.timestamp_h = moment(e.timestamp).fromNow();
+                    return e;
+                })
                 .sortBy(function (e) {
                     return e.timestamp;
                 })
