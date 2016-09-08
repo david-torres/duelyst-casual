@@ -43,14 +43,26 @@ func main() {
 	e.Static("/assets", "assets")
 
 	// init db
+	host := Config.GetString("db.host")
+	database := Config.GetString("db.database")
+
 	session, err := r.Connect(r.ConnectOpts{
-		Address:  Config.GetString("db.host"),
-		Database: Config.GetString("db.database"),
+		Address:  host,
+		Database: database,
 	})
 
+	result, err := r.DBList().Contains(database).Run(session)
 	if err != nil {
-		// db is down, die
-		log.Fatalln(err.Error())
+		log.Fatalf("error checking if database exists %s", err)
+	}
+
+	var dbExists bool
+	result.One(&dbExists)
+
+	if !dbExists {
+		log.Println("Creating db and tables")
+		r.DBCreate(database).RunWrite(session)
+		r.TableCreate("games").RunWrite(session)
 	}
 
 	// routes
