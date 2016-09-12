@@ -1,5 +1,5 @@
 // open websocket
-var ws = new WebSocket("ws://" + window.location.host + "/ws");
+var ws = new ReconnectingWebSocket("ws://" + window.location.host + "/ws", null, {reconnectInterval: 5000, maxReconnectAttempts: 3});
 
 // register modal component
 Vue.component('modal', {
@@ -99,5 +99,5 @@ ws.onclose = function (e) {
 
 ws.onerror = function (e) {
     console.log(e);
-    alert("A wild error appeared! please refresh your browser");
+    alert("A wild error appeared! please refresh your browser or try again later");
 };
