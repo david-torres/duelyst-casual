@@ -14,8 +14,14 @@ import (
 func Socket(session *r.Session) websocket.Handler {
 	return websocket.Handler(func(ws *websocket.Conn) {
 		// Initial socket connection, get changefeed
-		games, _ := r.Table("games").Filter(
-			r.Row.Field("accepted").Eq(false)).Changes(r.ChangesOpts{IncludeInitial: true}).Run(session)
+
+		games, _ := r.Table("games").
+			// find games that are +/-30m old (unfortunately now() doesn't update automatically its a point in time from when this changefeed is created)
+			Filter(r.Row.Field("timestamp").During(r.EpochTime(r.Now().ToEpochTime().Sub(1800)), r.EpochTime(r.Now().ToEpochTime().Add(1800)))).
+			// find games that have not been accepted
+			Filter(r.Row.Field("accepted").Eq(false)).
+			Changes(r.ChangesOpts{IncludeInitial: true}).
+			Run(session)
 
 		// write changes to socket
 		go func() {
