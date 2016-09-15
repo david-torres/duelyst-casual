@@ -1,5 +1,5 @@
 // open websocket
-var ws = new ReconnectingWebSocket("ws://" + window.location.host + "/ws", null, {reconnectInterval: 5000, maxReconnectAttempts: 3});
+var ws = new ReconnectingWebSocket("ws://" + window.location.host + "/ws", null, { reconnectInterval: 5000, maxReconnectAttempts: 3 });
 
 // register modal component
 Vue.component('modal', {
@@ -24,6 +24,19 @@ var app = new Vue({
         description: null,
         accepted: null,
         items: []
+    },
+    computed: {
+        validation: function () {
+            return {
+                creator: !!this.creator.trim()
+            }
+        },
+        isValid: function () {
+            var validation = this.validation
+            return Object.keys(validation).every(function (key) {
+                return validation[key]
+            })
+        }
     },
     methods: {
         receive: function (item) {
@@ -62,13 +75,14 @@ var app = new Vue({
             this.$set('items', items);
         },
         post: function (e) {
-            e.preventDefault();
-            ws.send(JSON.stringify({
-                creator: this.creator,
-                faction: this.faction,
-                description: this.description,
-                accepted: (this.accepted === 1)
-            }));
+            if (this.isValid) {
+                ws.send(JSON.stringify({
+                    creator: this.creator,
+                    faction: this.faction,
+                    description: this.description,
+                    accepted: (this.accepted === 1)
+                }));
+            }
         },
         accept: function (index) {
             var item = this.items[index];
