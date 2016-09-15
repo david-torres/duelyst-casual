@@ -13,13 +13,16 @@ import (
 // Socket handles the websocket
 func Socket(session *r.Session) websocket.Handler {
 	return websocket.Handler(func(ws *websocket.Conn) {
-		// Initial socket connection, get changefeed
+		// decay time of items
+		var decay int32 = 86400
 
+		// Initial socket connection, get changefeed
 		games, _ := r.Table("games").
-			// find games that are +/-30m old (unfortunately now() doesn't update automatically its a point in time from when this changefeed is created)
-			Filter(r.Row.Field("timestamp").During(r.EpochTime(r.Now().ToEpochTime().Sub(1800)), r.EpochTime(r.Now().ToEpochTime().Add(1800)))).
+			// find games that are +/- decay old (unfortunately now() doesn't update automatically its a point in time from when this changefeed is created)
+			Filter(r.Row.Field("timestamp").During(r.EpochTime(r.Now().ToEpochTime().Sub(decay)), r.EpochTime(r.Now().ToEpochTime().Add(decay)))).
 			// find games that have not been accepted
 			Filter(r.Row.Field("accepted").Eq(false)).
+			// get changefeed
 			Changes(r.ChangesOpts{IncludeInitial: true}).
 			Run(session)
 
