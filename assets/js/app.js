@@ -28,7 +28,7 @@ var app = new Vue({
     computed: {
         validation: function () {
             return {
-                creator: !!this.creator.trim()
+                creator: (!!this.creator.trim() && !(this.creator.length > 20)),
             }
         },
         isValid: function () {

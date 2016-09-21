@@ -139,7 +139,7 @@
                 <div class="form-group" v-bind:class="{ 'has-error': !validation.creator }">
                     <label for="creator">In-Game Name</label>
                     <input type="text" id="creator" v-model="creator" class="form-control" placeholder="e.g. DuelystPlayer42">
-                    <span v-show="!validation.creator">Name cannot be empty.</span>
+                    <span v-show="!validation.creator">Name is invalid.</span>
                 </div>
                 <div class="form-group">
                     <label for="faction">Faction</label>
@@ -154,7 +154,7 @@
                 </div>
                 <div class="form-group">
                     <label for="description">Description (optional) </label>
-                    <textarea id="description" v-model="description" class="form-control" rows="5" placeholder="Description of the type of game you're looking for, e.g.: LF Tier 1, LF mentor, LF memedeck">
+                    <textarea id="description" v-model="description" class="form-control" rows="5" placeholder="Description of the type of game you're looking for, e.g.: LF Tier 1, LF mentor, LF memedeck"  maxlength="100">
                     </textarea>
                 </div>
                 <input type="hidden" id="accepted" v-model="accepted" value="0">
@@ -185,6 +185,7 @@
         </modal>
 
         <script src="/assets/js/app.js"></script>
+    </div>
 </body>
 
 </html>
