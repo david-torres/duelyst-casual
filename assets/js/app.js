@@ -7,28 +7,27 @@ Vue.component('modal', {
     props: {
         show: {
             type: Boolean,
-            required: true,
-            twoWay: true
+            required: true
         }
     }
 });
 
 // init app
 var app = new Vue({
-    el: "#container",
+    el: "#app",
     data: {
         showModal: false,
         current: null,
-        creator: null,
-        faction: null,
-        description: null,
-        accepted: null,
+        creator: "",
+        faction: "",
+        description: "",
+        accepted: 0,
         items: []
     },
     computed: {
         validation: function () {
             return {
-                creator: (!!this.creator.trim() && !(this.creator.length > 20)),
+                creator: (!!this.creator.trim() && !(this.creator.length > 20))
             }
         },
         isValid: function () {
@@ -74,7 +73,7 @@ var app = new Vue({
 
             this.$set('items', items);
         },
-        post: function (e) {
+        post: _.debounce(function (e) {
             if (this.isValid) {
                 ws.send(JSON.stringify({
                     creator: this.creator,
@@ -83,15 +82,15 @@ var app = new Vue({
                     accepted: (this.accepted === 1)
                 }));
             }
-        },
-        accept: function (index) {
+        }, 500),
+        accept: _.debounce(function (index) {
             var item = this.items[index];
             this.current = item;
             this.showModal = true;
             ws.send(JSON.stringify({
                 id: item.id
             }));
-        },
+        }, 500),
     }
 });
 
